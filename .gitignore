@@ -1,0 +1,17 @@
+node_modules
+test/*.js
+test/*.js.map
+src/*.js
+src/*.js.map
+src/*/*.js
+src/*/*.js.map
+test/*/*.js
+test/*/*.js.map
+npm-debug.log
+.npmignore
+dist
+npm-debug.log.*
+src/*.ngsummary.json
+src/*/*.ngsummary.json
+src/*/*.ngfactory.ts
+src/*/*.ngstyle.ts

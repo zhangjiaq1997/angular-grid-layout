@@ -1,0 +1,8 @@
+<div #grid [ngStyle]="gridStyle" class="grid" [ngClass]="gridConfig.theme">
+  <widget-shadow> </widget-shadow>
+  <widget *ngFor="let widget of widgets" (onActivateWidget)="onActivateWidget($event)" (onClose)="onClose($event)"
+  [id]="widget.id" [innerComponent]="widget.innerComponent" [position]="widget.position" [inputSize]="widget.size"
+  [widgetTitle]="widget.widgetTitle" [innerHTML]="widget.innerHTML">
+  </widget>
+</div>
+<button (click)="_checkBlankBegin()">检查</button>

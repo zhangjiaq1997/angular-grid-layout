@@ -1,0 +1,26 @@
+.grid{
+  position:relative;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  box-sizing: border-box;
+  font-size:14px;
+  line-height: normal;
+  >>> div{
+    line-height: normal;
+    font-size:14px;
+    box-sizing: border-box;
+  }
+  &.dark{
+      background-color:#0c0d0d;
+  }
+  &.light{
+    background-color:#e9eaed;
+  }
+  &.sky{
+    background-color:#2C3E50;
+  }
+}

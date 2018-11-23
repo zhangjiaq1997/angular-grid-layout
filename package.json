@@ -1,0 +1,63 @@
+{
+  "name": "ng2-grid-component",
+  "version": "0.3.21",
+  "description": "angular 2 grid layout",
+  "main": "dist/bundles/ng2-grid.umd.js",
+  "module": "index.js",
+  "scripts": {
+    "start": "concurrently \"tsc -w\" \"lite-server\" \"gulp watch\" ",
+    "lite": "lite-server",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "ngc -p tsconfig.aot.json",
+    "package": "rollup -c",
+    "minify": "uglifyjs dist/bundles/ng2-grid.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng2-grid.umd.min.js",
+    "aot": "rimraf dist && npm run transpile",
+    "compile": "gulp sass && gulp copy && gulp inline && npm run package && npm run minify",
+    "build": "npm run aot && npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lunzhang/ng2-grid"
+  },
+  "keywords": [
+    "angular2",
+    "grid"
+  ],
+  "author": "lunzhang",
+  "license": "MIT",
+  "homepage": "https://github.com/lunzhang/ng2-grid",
+  "files": [
+    "dist/*"
+  ],
+  "devDependencies": {
+    "@angular/common": "~2.4.0",
+    "@angular/compiler": "^2.4.5",
+    "@angular/compiler-cli": "^2.4.5",
+    "@angular/core": "~2.4.0",
+    "@angular/platform-browser": "~2.4.0",
+    "@angular/platform-browser-dynamic": "~2.4.0",
+    "@types/node": "^7.0.4",
+    "concurrently": "^3.0.0",
+    "core-js": "^2.4.1",
+    "gulp": "^3.9.1",
+    "gulp-better-rollup": "^1.0.2",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-sass": "^3.0.0",
+    "lite-server": "^2.2.2",
+    "reflect-metadata": "^0.1.8",
+    "rimraf": "^2.5.4",
+    "rollup": "^0.41.4",
+    "run-sequence": "^1.2.2",
+    "rxjs": "5.0.1",
+    "systemjs": "0.19.40",
+    "typescript": "^2.1.5",
+    "uglify-js": "^2.7.5",
+    "zone.js": "^0.7.4"
+  },
+  "typings": "dist/main.d.ts",
+  "dependencies": {
+    "ng2-grid-component": "^0.3.21"
+  }
+}
