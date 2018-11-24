@@ -33,6 +33,9 @@ public activeWidget:NgWidget;
 public widgets=[];
 public windowScroll:any={x:0,y:0};
 public collisionsFlag:number;
+public direction: number; //判断移动方向 控制方块垂直水平 1水平左右 2垂直下 3垂直上
+public isWidgetShadowChange: boolean; // 阴影是否改变位置
+public isCollision: boolean; //是否有碰撞
 
 // 设置自定义配置
 ngOnInit(){
@@ -58,10 +61,21 @@ onMouseMove(e){
       let dy = e.clientY - this.activeWidget.mousePoint.y;
       let gridPos = this._getPosition();
       // 如果有新的row/col,更新它
+       if(this.ngWidgetShadow.position.col!=gridPos.col&&this.ngWidgetShadow.position.row==gridPos.row){
+           this.direction = 1;
+       }else if(this.ngWidgetShadow.position.col==gridPos.col&&this.ngWidgetShadow.position.row<gridPos.row){
+           this.direction = 2;
+       }else if(this.ngWidgetShadow.position.col==gridPos.col&&this.ngWidgetShadow.position.row>gridPos.row){
+           this.direction = 3;
+       }
       if(this.ngWidgetShadow.position.row != gridPos.row || this.ngWidgetShadow.position.col != gridPos.col){
-        this._checkCollision(gridPos,this.activeWidget.size,this.activeWidget.id);
-        this.ngWidgetShadow.setPosition(gridPos);
-        this._calcGridSize();
+        this._checkCollision(gridPos,this.activeWidget.size,this.activeWidget.id,this.direction);
+        if(this.isWidgetShadowChange || this.isCollision ){
+            this.ngWidgetShadow.setPosition(gridPos);
+            this._calcGridSize();
+        }
+        this.isWidgetShadowChange = false;
+        this.isCollision = true;
       }
       // 保持小部件在网格中
       if(top > 0 || dy > 0){
@@ -121,7 +135,6 @@ onMouseMove(e){
  **/
 @HostListener('document:mouseup', ['$event'])
 onMouseUp(e){
-  console.log(this.widgets);
   if(this.activeWidget){
     if(this.activeWidget.isDrag){
       this.onDragStop.emit(this.activeWidget);
@@ -185,6 +198,7 @@ private _getCollision(position,size,id){
                 || (widget.position.row + widget.size.y-1 >= position.row && widget.position.row + widget.size.y-1 < position.row + size.y)
                 || (position.row >= widget.position.row && position.row < widget.position.row + widget.size.y))){
                 collisions.push(widget);
+                this.isCollision = false;
             }
         }
     });
@@ -192,21 +206,21 @@ private _getCollision(position,size,id){
 }
 
 // 检查小部件碰撞并相应调整
-private _checkCollision(position,size,id){
-    var collisions = this._getCollision(position,size,id);
-
-    let widgetFirst = true;
+private _checkCollision(position,size,id,moveMethod?){
+    let collisions;
+    collisions = this._getCollision(position,size,id);
+    let moreWidget = false;
+    if(collisions.length!=1){
+        moreWidget = true;
+    }
     collisions.forEach((widget)=>{
-        console.log(widget.id)
-        // debugger
-        // console.log(this.ngWidgetShadow);
-        // if((this.ngWidgetShadow.position.row<widget.position.row)&&widgetFirst){
-        //     widgetFirst = false;
-        //     widget.position.row = widget.position.row-1;
-        //     console.log(widget);
-        // }else{
-        widget.position.row = position.row + size.y;
-        // }
+            if(moveMethod == 1||moveMethod ==3 || !moveMethod || (moreWidget&&position.row<widget.position.row+widget.size.y-1)){
+                widget.position.row = position.row + size.y;
+                this.isWidgetShadowChange = true;
+            }else if(moveMethod == 2 && position.row>=widget.position.row+widget.size.y-1){
+                widget.position.row = widget.position.row-size.y;
+                this.isWidgetShadowChange = true;
+            }
         widget.calcPosition();
         this._checkCollision(widget.position,widget.size,widget.id);
     });
@@ -343,11 +357,6 @@ private _findWidgetById(id){
 }
 
 //
-private _checkBlankBegin(){
-  this.ngWidgets.forEach(item=>{
-      this._checkBlank(item);
-  })
-}
 private _checkBlank(item){
     let checkTest1 = [];
     let checkTest2 = [];
